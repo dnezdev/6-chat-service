@@ -46,5 +46,5 @@ export const messageDocument: IMessageDocument = {
   receiverPicture: '',
   isRead: false,
   hasOffer: false,
-  offer: undefined,
+  offer: undefined
 };

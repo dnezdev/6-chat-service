@@ -27,9 +27,4 @@ const userMessages = async (req: Request, res: Response): Promise<void> => {
   res.status(StatusCodes.OK).json({ message: 'Chat messages', messages });
 };
 
-export {
-  conversation,
-  messages,
-  conversationList,
-  userMessages
-};
+export { conversation, messages, conversationList, userMessages };
