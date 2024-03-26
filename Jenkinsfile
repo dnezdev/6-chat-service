@@ -113,7 +113,28 @@ pipeline {
     //     sh "docker rmi $IMAGE_NAME:stable"
     //   }
     // }
-
+        stage("Clean Artifacts") {
+    steps {
+        script {
+            try {
+                // Remove Docker images
+                echo "Removing Docker image $IMAGE_NAME:$IMAGE_TAG"
+                sh "docker rmi $IMAGE_NAME:$IMAGE_TAG"
+                
+                echo "Removing Docker image $IMAGE_NAME:stable"
+                sh "docker rmi $IMAGE_NAME:stable"
+                
+                // Log success message
+                echo "Clean Artifacts stage completed successfully."
+            } catch (Exception e) {
+                // Log error message if any step fails
+                echo "Error occurred during Clean Artifacts stage: ${e.message}"
+                currentBuild.result = 'FAILURE' // Mark the build as failed
+            }
+        }
+    }
+}
+//--------------------------------------------------------
     stage("Create New Pods") {
       steps {
         withKubeCredentials(kubectlCredentials: [[caCertificate: '', clusterName: 'minikube', contextName: 'minikube', credentialsId: 'jenkins-k8s-token', namespace: '', serverUrl: 'https://172.27.123.138:8443']]) {
