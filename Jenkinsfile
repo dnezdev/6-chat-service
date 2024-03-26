@@ -138,7 +138,7 @@ pipeline {
         clusterName: 'minikube', // Adjust clusterName as per your Kubernetes configuration
         contextName: 'minikube', // Adjust contextName as per your Kubernetes configuration
         credentialsId: 'jenkins-k8s-token', // Adjust credentialsId according to your Kubernetes credentials in Jenkins
-        namespace: 'production', // Specify the namespace where you want to delete pods
+        namespace: 'default', // Specify the namespace where you want to delete pods
         serverUrl: 'https://172.27.123.138:8443' // Adjust serverUrl as per your Kubernetes configuration
       ]
     ]) {
