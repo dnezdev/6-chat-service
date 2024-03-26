@@ -114,21 +114,46 @@ pipeline {
     //   }
     // }
 
+    // stage("Create New Pods") {
+    //   steps {
+    //     withKubeCredentials(kubectlCredentials: [[caCertificate: '', clusterName: 'minikube', contextName: 'minikube', credentialsId: 'jenkins-k8s-token', namespace: '', serverUrl: 'https://172.27.123.138:8443']]) {
+    //       script {
+    //         def pods = groovyMethods.findPodsFromName("${namespace}", "${serviceName}")
+    //         for (podName in pods) {
+    //           sh """
+    //             kubectl delete -n ${namespace} pod ${podName}
+    //             sleep 10s
+    //           """
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+
     stage("Create New Pods") {
-      steps {
-        withKubeCredentials(kubectlCredentials: [[caCertificate: '', clusterName: 'minikube', contextName: 'minikube', credentialsId: 'jenkins-k8s-token', namespace: '', serverUrl: 'https://172.27.123.138:8443']]) {
-          script {
-            def pods = groovyMethods.findPodsFromName("${namespace}", "${serviceName}")
-            for (podName in pods) {
-              sh """
-                kubectl delete -n ${namespace} pod ${podName}
-                sleep 10s
-              """
-            }
-          }
+  steps {
+    withKubeCredentials(kubectlCredentials: [
+      [
+        caCertificate: '', // Provide CA certificate if needed
+        clusterName: 'minikube', // Adjust clusterName as per your Kubernetes configuration
+        contextName: 'minikube', // Adjust contextName as per your Kubernetes configuration
+        credentialsId: 'jenkins-k8s-token', // Adjust credentialsId according to your Kubernetes credentials in Jenkins
+        namespace: 'production', // Specify the namespace where you want to delete pods
+        serverUrl: 'https://172.27.123.138:8443' // Adjust serverUrl as per your Kubernetes configuration
+      ]
+    ]) {
+      script {
+        def pods = groovyMethods.findPodsFromName("${namespace}", "${serviceName}")
+        for (podName in pods) {
+          sh """
+            kubectl delete -n ${namespace} pod ${podName}
+            sleep 10s
+          """
         }
       }
     }
+  }
+}
   }
   post {
     success {
